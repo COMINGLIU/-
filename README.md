@@ -23,3 +23,12 @@
         li {
             display: inline-block;
         }
+
+总结：在轮播中用到的知识点有：
+    1.单体单例模式封装
+    2.事件监听（EventUtil.addHandle）解决兼容问题
+    3.获取event(EventUtil.getEvent)解决兼容问题
+    4.获取触发event事件的目标target(EventUtil.getTarget)解决兼容
+    5.获取css样式（EventUtil.getStyle）解决兼容
+    6.结点碎片（document.createDocumentFrame()）降低dom操作，提升性能
+    7.利用e.type实现一个函数实现多个事件
