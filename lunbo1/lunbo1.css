@@ -15,21 +15,14 @@ ul,body {
     width: 100px;
     height: 200px;
     margin: 0 auto;
-    border: 10px solid #333;
 }
 ul {
     position: absolute;
     list-style: none;
     padding: 0;
     font-size: 0;
-    transition: all .3s;
-}
-ul:after {
-    content: "";
-    display: block;
-    clear: both;
+    transition: all 1.5s;
 }
 li {
     display: inline-block;
-    background-color: #333;
 }

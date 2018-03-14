@@ -41,7 +41,7 @@ var Run = (function(window,document) {
            if(objLeft>0) {
                 obj.style.left = -(num-1)*itemW + "px";
            }
-       },3000);
+       },5000);
     }
     // 给元素绑定事件的函数
     var EventUtil = {
@@ -74,20 +74,24 @@ var Run = (function(window,document) {
     */ 
     var demo = {
         num: 4,
-        oWrapper: document.querySelector(".content"),
+        itemW: 300,
+        itemH: 180,
         items: null,
+        imgs: null,
         init: function(config){
+            this.oWrapper = config.oWrapper;
             this.num = config.num||this.num;
-            this.itemW = config.itemW;
-            this.itemH = config.itemH;
-            this.imgs = config.imgs;
+            this.itemW = config.itemW||this.itemW;
+            this.itemH = config.itemH||this.itemH;
+            this.imgs = config.imgs||this.imgs;
             this.oWrapper.appendChild(creatItem(this.num,this.itemW,this.itemH).oUl);
             this.oUl = document.querySelector(".content ul");
             swipper(this.num,this.oUl,this.itemW);
             this.items = document.querySelectorAll(".content ul li img");
-            console.log(this.items);
-            for(let key in this.items) {
-                this.items[key].src=this.imgs[key];
+            if(this.imgs) {
+                for(let key in this.items) {
+                    this.items[key].src=this.imgs[key];
+                }
             }
        }
     }
