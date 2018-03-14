@@ -1,6 +1,6 @@
 var Run = (function(window,document,e) { 
-     // 给元素绑定事件的函数
-     var EventUtil = {
+    /*=============================1.给元素绑定事件的函数===============================*/ 
+    var EventUtil = {
         getEvent: function(e) {
             return window.e||e;
         },
@@ -38,7 +38,9 @@ var Run = (function(window,document,e) {
             return getComputedStyle?getComputedStyle(obj)[attr]:obj.currentStyle[attr];
         }
     };
-    // 随机色函数
+    /*=============================2.给元素绑定事件的函数===============================*/ 
+
+    /*=============================3.随机色函数========================================*/
     function randomColor() {
         var txt = "#";
         for(var i=0;i<6;i++) {
@@ -46,7 +48,13 @@ var Run = (function(window,document,e) {
         }
         return txt;
     }
-    // 创建按钮
+    /*=============================随机色函数========================================*/
+
+    /*=============================4.创建按钮========================================*/
+    /*
+    *parentNode:此处表示content，包含ul的容器
+    *itemH:图片高度
+    */
     function creatBtn(parentNode,itemH) {
         var leftBtn = document.createElement("div"),
             rightBtn = document.createElement("div");
@@ -61,30 +69,54 @@ var Run = (function(window,document,e) {
         parentNode.appendChild(leftBtn);
         parentNode.appendChild(rightBtn);
     }
-    // 创建item函数
+    /*=============================创建按钮========================================*/
+
+    /*=============================5.创建item函数===================================*/
     function creatItem(num,itemW,itemH){
         var frag = document.createDocumentFragment(),
-            oUl = document.createElement("ul");
+            frag2 = document.createDocumentFragment(),
+            oUl = document.createElement("ul"),
+            oPoints = document.createElement("div");
         oUl.style.width = num*itemW + "px";
         oUl.style.height = itemH + "px";
         oUl.style.right = 0;
+        oPoints.style.position = "absolute";
+        oPoints.className ="points";
         demo.oWrapper.style.width = itemW + "px";
         demo.oWrapper.style.height = itemH + "px";
         for(var i=0;i<num;i++) {
             var item = document.createElement("li"),
-                img = document.createElement("img");
+                img = document.createElement("img"),
+                points = document.createElement("em");
             item.appendChild(img);
             item.style.width = itemW + "px";
             item.style.height = itemH + "px";
             item.style.backgroundColor = randomColor();
             frag.appendChild(item);
+            frag2.appendChild(points);
         }
         oUl.appendChild(frag);
-        return oUl;
+        oPoints.appendChild(frag2);
+        return {
+            oUl: oUl,
+            oPoints: oPoints
+        };
     }
+    /*=============================创建item函数===================================*/
     // 轮播函数
-    function swipper(num,obj,itemW,leftBtn,rightBtn,btns) {
+    /*
+    *num:轮播图片总数
+    *obj:ul
+    *itemW:图片宽度
+    *leftBtn:左边btn
+    *rightBtn: 右边btn
+    *btns:两个btn的集合
+    *points:小点
+    */
+    /*=============================6.swipper轮播=======================================*/ 
+    function swipper(num,obj,itemW,leftBtn,rightBtn,btns,points) {
         var timer = setInterval(setPlaying,1000);
+        // 自动轮播函数
         function setPlaying() {
             var objLeft = parseInt(EventUtil.getStyle(obj,"left"))+itemW;
             obj.style.left = objLeft + "px";
@@ -92,15 +124,11 @@ var Run = (function(window,document,e) {
                 obj.style.left = -(num-1)*itemW + "px";
             }  
        }
-        /*
-        *swipper函数从这以上：自动轮播实现
-        *swipper函数从这以下：点击左右btn实现图片切换
-        */    
-        /*======================================方法一、使用一个函数实现多个事件======================================================*/    
+        /*===方法一、使用一个函数实现多个事件===*/    
         //leftBtn所有绑定事件
         var leftBtnFn = function(e) {
             e = window.event||e;
-            switch(event.type) {
+            switch(e.type) {
                 case "mouseenter":
                     clearInterval(timer);
                     break;
@@ -113,10 +141,10 @@ var Run = (function(window,document,e) {
                     }
                     break;
                 case "mouseleave":
-                    time = setInterval(setPlaying,1000);
+                    timer = setInterval(setPlaying,1000);
                     break;
             }
-        } 
+        };
         // rightBtn所有绑定事件
         var rightBtnFn = function(e) {
             e = window.e||e;
@@ -136,15 +164,14 @@ var Run = (function(window,document,e) {
                     timer = setInterval(setPlaying,1000);
                     break;
             }
-        }
+        };
         btns[0].onmouseenter = leftBtnFn;
         btns[0].onclick = leftBtnFn;
         btns[0].onmouseleave = leftBtnFn;
         btns[1].onmouseenter = rightBtnFn;
         btns[1].onclick = rightBtnFn;
         btns[1].onmouseleave = rightBtnFn;
-        /*============================================================================================*/    
-        /*============================方法二、使用时间监听，可替代上一种方法========================================*/ 
+        /*===方法二、使用事件监听，可替代上一种方法===*/ 
         // left-mouseenter事件
         // EventUtil.addHandle(leftBtn,"mouseenter",function(e) {
         //     clearInterval(timer);
@@ -178,10 +205,50 @@ var Run = (function(window,document,e) {
         // EventUtil.addHandle(rightBtn,"mouseleave",function(e) {
         //     timer = setInterval(setPlaying,1000);
         // });
-       /*====================================================================*/ 
+        /*==========================================================*/ 
+        // point切换事件
+        (function() {
+            // points所有绑定事件
+            /*
+            *obj: ul
+            *kNum: 第几个点
+            *itemw：图片宽度
+            */ 
+           var pointsFn = function(e,kNum) {
+                e = window.e||e;
+                switch(e.type) {
+                    case "mouseenter":
+                        clearInterval(timer);
+                        console.log(kNum,itemW);
+                        obj.style.left = kNum*itemW + "px";
+                        break;
+                    case "mouseleave":
+                        timer = setInterval(setPlaying,1000);
+                        break;
+                }
+            };
+            /*
+            *swipper函数从这以上：自动轮播实现
+            *swipper函数从这以下：点击左右btn实现图片切换
+            */ 
+            for(let i=0,len=points.length;i<len;i++) {
+                points[i].onmouseenter = function() {
+                    clearInterval(timer);
+                    obj.style.left = -itemW*i + "px";
+                };
+                points[i].onmouseleave = function() {
+                    timer = setInterval(function() {
+                        var objLeft = parseInt(EventUtil.getStyle(obj,"left"))+itemW;
+                        obj.style.left = objLeft + "px";
+                        if(objLeft>0) {
+                            obj.style.left = -(num-1)*itemW + "px";
+                        }
+                    },1000);
+                };
+            }
+        })();
     }
-    // 点击轮播
-    // function clickMove(num,obj,itemW,leftBtn,rightBtn)
+       /*=============================swipper轮播=======================================*/ 
     /*
     *所需函数：
     *creatItem(num,itemW,itemH)
@@ -213,11 +280,16 @@ var Run = (function(window,document,e) {
             // 右侧btn
             this.rightBtn = document.querySelector(".rightBtn");
             // 创建ul、li、img
-            this.oWrapper.appendChild(creatItem(this.num,this.itemW,this.itemH));
+            this.oWrapper.appendChild(creatItem(this.num,this.itemW,this.itemH).oUl);
+            this.oWrapper.appendChild(creatItem(this.num,this.itemW,this.itemH).oPoints)
             // 获取ul
             this.oUl = document.querySelector(".content ul");
+            // 获取points
+            this.oPoints = document.querySelectorAll(".points em");
             // 轮播实现
-            swipper(this.num,this.oUl,this.itemW,this.leftBtn,this.rightBtn,this.btns);
+            swipper(this.num,this.oUl,this.itemW,this.leftBtn,this.rightBtn,this.btns,this.oPoints);
+            // 
+            // pointCheck(this.oUl,this.itemW,this.oPoints);
             // 获取所有图片
             this.items = document.querySelectorAll(".content ul li img");
             // 设置每张图片的路径
