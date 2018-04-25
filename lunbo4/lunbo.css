@@ -32,7 +32,7 @@ body {
     left: 0;
     top: 0;
     font-size: 0;
-    animation: play 12s infinite;
+    animation: play 12s alternate infinite;
 }
 .wrapper-ul li {
     display: inline-block;
